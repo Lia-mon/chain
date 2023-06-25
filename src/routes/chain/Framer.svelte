@@ -1,0 +1,175 @@
+<script lang="ts">
+import UnitFrames from './UnitFrames.svelte';
+import { units, unitFrames,delays } from '../../stores.js'
+import  { slide } from 'svelte/transition'
+import type { Hit } from '../../chaining/chains.js';
+import { merger,breaks,breakMerge } from '../../chaining/chains.js';
+
+let directFrames : Array<Hit[]> = Array(6).fill([]);
+let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are tied to priority)
+
+//delays tied to the unit
+//units units,index where index plays the role of priority
+
+let containerVisual: HTMLDivElement;
+
+const frameSize = 9;
+
+const countBreaks=(as: Array<Array<any>>):number =>{
+    let s = 0;
+    for(const a of as){
+        s+=a.length;
+    }
+    return s;
+}
+
+const inUnitCmp = (h1 : Hit ,h2 : Hit)=>{
+        if(h1.frame !== h2.frame){
+            return h1.frame - h2.frame;
+        }
+
+        if(h1.cast !== h2.cast){
+            return h1.cast - h2.cast;
+        }
+        
+        return 0;
+}
+
+const sanitize = (id:number)=>(e:Event)=>{
+    e.preventDefault();
+    if(!e.target){
+        return;
+    }else{
+        const node = e.target as HTMLInputElement;
+        node.value = `${Math.max(0,Number(node.value))}`;
+        $delays[id] = Number(node.value);
+    }
+}
+    
+$:{
+    for(let i = 0 ; i < $units.length ; i++){
+        directFrames[i] = $unitFrames[i].slice().sort(inUnitCmp);
+        if(directFrames[i][0] !== undefined){
+            topDiffs[i] = directFrames[i][0].frame;
+        }
+    }
+}
+
+$: topMax = Math.max(...topDiffs);
+
+$: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
+
+//Uses frame size (9px) should prolly make that a setting somewhere
+$:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units.length}% ${frameSize}px`;
+
+</script>
+<!------------------------------------------------------------------------------------->
+
+<div class='container-controls'>
+    {#each $units as unit,i (unit) }
+        <div class='control'>
+            <label for='{`prio-${i}`}'>{`Delay for prio ${i+1} | unit ${unit+1}`}</label>
+            <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'>
+            <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0'>
+        </div>
+    {/each}
+</div>
+
+<hr>
+
+<div>
+    {#each $units as unit,i}
+        <div>
+            Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
+        </div>
+    {/each}
+</div>
+
+<hr>
+
+ {#if ($units.length > 0)}
+<div class='container-visual' 
+     style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
+     transition:slide="{{axis : 'x'}}"
+     bind:this={containerVisual}>
+
+    {#each $units as unit,i }
+
+    <UnitFrames
+        frameSize = {frameSize}
+        frames={directFrames[i]}
+        topDiff={topDiffs[i]}
+        bind:delay={$delays[unit]}
+        breaks = {fBreaks[i]}>
+    </UnitFrames>
+
+    {/each}
+    <div class='infobar'> There's {countBreaks(fBreaks)} breaks</div>
+</div>
+{/if}
+
+<!-- <div cla
+    ss='test'>Testerino</div> -->
+
+<!------------------------------------------------------------------------------------->
+
+<style>
+
+/* Is not fully PROGRAMMATIC in temrs of frameSize */
+.container-visual{
+    display:grid;
+    column-gap:0px;
+    background-image: 
+    linear-gradient(to right,
+                        rgba(0, 0, 0, .85) 0px 1px,
+                        rgba(23, 25, 143, 0) 1px 10px)  
+                        ,
+    linear-gradient(to bottom,
+                        rgba(255, 255, 255, 0) 3.5px,
+                        rgb(100, 100, 100) 4px 5px,
+                        rgba(23, 25, 143, 0) 5.5px 9px);
+
+    background-size: 50% 9px;
+}
+
+.container-controls{
+    display: flex;
+    flex-direction: column;
+}
+
+.control{
+    padding: 1em 0;
+    /* margin-top:1em; */
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+}
+
+.control > *{
+    font-size: large;
+    /* flex:1; */
+    width:300px;
+    height:2em;
+    text-align: center;
+}
+
+.control:last-child{
+    margin-bottom:0;
+    border-bottom:none;
+}
+
+.infobar{
+    text-indent: 10px;
+    font-size: calc(4vw);
+    background-color: rgb(250, 250, 250);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    position: sticky;
+    top:0;
+    right:0;
+    max-height:100vh;
+}
+
+</style>
