@@ -147,7 +147,7 @@ export function breakMerge(unitFrames: Hit[][],
     let lastFrame : number = 0;
     
     const groupSize = (unit:number, lastFrame : number) =>{
-        let increment = 1;
+        let increment = 0;
         while(index[unit]+increment < unitFrames[unit].length){
             const totalIndex = index[unit]+increment;
             const currentFrame = unitFrames[unit][totalIndex].frame + delays[unit] - topDiffs[unit];
@@ -157,29 +157,6 @@ export function breakMerge(unitFrames: Hit[][],
             increment++;
         }
         return increment;
-    }
-
-    const allPairs = (unit:number,increment:number,frame:number)=>{
-        let pairs : number[] = [];
-        let c = 1;
-        for(; c < count ; c++){
-            if(increment === groupSize(unit+c % count,frame) ){
-                pairs.push(unit+c % count);
-            }
-        }
-        return pairs;
-    }
-
-    const smallestPack = (frame:number,size:number)=>{
-        let c = 0;
-        let u = 1;
-        for(; c < count ; c++){
-            const cSize = groupSize(unit+c % count,frame);
-            if(cSize < size){
-                size = cSize;
-            }
-        }
-        return Math.max(size,2);
     }
 
     const nextUnit = ()=>{
@@ -201,6 +178,7 @@ export function breakMerge(unitFrames: Hit[][],
 
     lastUnit = -1;
     lastFrame = Math.min(...delays) ;
+    let counter = 0;
 
     while(index.some((e,i)=>e < unitFrames[i].length)){ //scary scary loop :B
     
@@ -215,53 +193,54 @@ export function breakMerge(unitFrames: Hit[][],
         if(unit === lastUnit && !currentHit.tag){
             breaks[unit].push([frameIndex[unit],0,'same unit in a row']);
         }
+        
+        //all of this is for packed frame checking >_>
+        let sizes :{ [key:string] : number[]} = {};
+        let smallBig = 1;
+        let big = 1;
 
+        for(let u = 0; u < count ; u++){
+            const csize = groupSize(u,currentFrame);
 
-        let increment = groupSize(unit, currentFrame);
-
-        if(increment > 1){
-
-            let sizes = [];
-            for(let u = 0; u < count ; u++){
-                sizes.push(groupSize(u,currentFrame));
+            if(csize === 0){
+                continue;
             }
 
-            let small = Math.min(...sizes.filter(e=>e>1));
+            if(sizes[`${csize}`]) {
+                sizes[`${csize}`].unshift(u);
+            }else{
+                sizes[`${csize}`] = [u];
+            }
 
+            index[u] +=csize; //advance indexes here !!!!!!!!!!
+            frameIndex[u]++;
+
+            if(csize >= big){
+                smallBig = big;
+                big = csize;
+                continue;
+            }
+
+            if(csize > smallBig){
+                smallBig = csize;
+            }
             
-            if(sizes.filter(e=>e>=small).length < 2){ //there's an idea where we check for sub-pairs too but ugh that's so annoying really
-                for(let k = 1; k < small ; k ++){ //looking for smallest pack let's us rewrite this even better, will do that >_< TODO
-                    if(!unitFrames[unit][index[unit]+k].tag){ //5 levels deep :b
-                        breaks[unit].push([frameIndex[unit],k,`packed frame without pair`]);
-                    }
-                }
-                index[unit] += small;
-                lastUnit = unit;
-                frameIndex[unit]++
-            }
-            else{ 
-                for(let u = 0; u < count ; u++){ 
-                    const size = sizes[u];
-                    if(size===small){
-                        frameIndex[u]++;
-                    }
-                    if(size>=small){
-                        index[u]+=small;
-                        lastUnit=u;
-                        carry=small;
-                    }
+            
+        }
+        
+        unit = sizes[`${big}`][0]; // has to be just one if it's bigger than smallBig :b
+        
+        if(big > smallBig){
+            for(let k = smallBig ; k < big ; k++){
+                if(!unitFrames[unit][index[unit]+k-big].tag){ //5 levels deep :b
+                    breaks[unit].push([frameIndex[unit]-1,k,`packed frame without pair`]);
                 }
             }
-
-        }else{
-            carry = 0;
-            index[unit]++; 
-            lastUnit = unit;
-            frameIndex[unit]++; //maybe leave this for later
-        }   
+        }
 
         //update last frame :D
         lastFrame = currentFrame;
+        lastUnit = unit;
     }
 
     return breaks;

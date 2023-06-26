@@ -3,7 +3,7 @@ import UnitFrames from './UnitFrames.svelte';
 import { units, unitFrames,delays } from '../../stores.js'
 import  { slide } from 'svelte/transition'
 import type { Hit } from '../../chaining/chains.js';
-import { merger,breaks,breakMerge } from '../../chaining/chains.js';
+import { breakMerge } from '../../chaining/chains.js';
 
 let directFrames : Array<Hit[]> = Array(6).fill([]);
 let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are tied to priority)
@@ -14,6 +14,9 @@ let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change 
 let containerVisual: HTMLDivElement;
 
 const frameSize = 9;
+
+let expand = false;
+
 
 const countBreaks=(as: Array<Array<any>>):number =>{
     let s = 0;
@@ -62,6 +65,7 @@ $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
 //Uses frame size (9px) should prolly make that a setting somewhere
 $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units.length}% ${frameSize}px`;
 
+$: console.log(fBreaks)
 </script>
 <!------------------------------------------------------------------------------------->
 
@@ -104,12 +108,24 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     </UnitFrames>
 
     {/each}
-    <div class='infobar'> There's {countBreaks(fBreaks)} breaks</div>
+    <div class='infobar'
+        class:expand> 
+
+        <span>There's {countBreaks(fBreaks)} breaks.</span>
+        {#each $units as unit,i}
+            <span>p{i+1}:{$delays[unit]-topDiffs[i]+topMax} </span> 
+        {/each}
+    <!-- 
+        <button class='infobuttons'
+            on:click={()=>{expand=!expand}}
+            >
+            {expand? '-' : '+'}
+        </button> -->
+
+    </div>
 </div>
 {/if}
 
-<!-- <div cla
-    ss='test'>Testerino</div> -->
 
 <!------------------------------------------------------------------------------------->
 
@@ -130,6 +146,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
                         rgba(23, 25, 143, 0) 5.5px 9px);
 
     background-size: 50% 9px;
+    width:100vw;
 }
 
 .container-controls{
@@ -161,6 +178,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 }
 
 .infobar{
+    /* padding-inline-start: 35px; */
     text-indent: 10px;
     font-size: calc(4vw);
     background-color: rgb(250, 250, 250);
@@ -170,6 +188,23 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     top:0;
     right:0;
     max-height:100vh;
+    display: flex;
+    justify-content: space-evenly;
 }
 
+.infobar button{
+    width: 20px;
+    height: 25px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: large;
+    background-color: unset;
+    border: 1px solid gray;
+}
+
+.infobar span{
+    /* margin-inline-end: 3px; */
+}
 </style>

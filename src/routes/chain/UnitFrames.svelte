@@ -12,6 +12,7 @@ export let frameSize = 7;
 let totalChange = 0 ;
 let initDelay = delay;
 let activeMove = false;
+let oldBreaks :Break[]= [];
 
 let container:HTMLDivElement;
 
@@ -21,7 +22,6 @@ function setHeight(e : HTMLDivElement,height:number){
     }
     e.style.minHeight = `${height}px`;
 }
-
 
 function handleMoving(e:CustomEvent){
     const pixelDiff = e.detail.value;
@@ -76,20 +76,31 @@ $:if(container){ //draw everything, if I box/group the data before sending them 
     if(frames.length > 0){
         setHeight(container,frameSize*(frames[frames.length-1].frame-topDiff+2));
     }
+
+    //apply breaks here when adding
+    // for(const b of breaks){
+    //         console.log(`new error [${b}]`);
+    //         container.children[b[0]].children[b[1]].classList.add('break');
+    //     }
+
+    oldBreaks = [];
 }
 
 $:if(container) container.style.paddingTop = `${delay*frameSize}px`;
 
+
 $: if(container){
-    for(const minic of container.children){
-        for(const hit of minic.children){
-            hit.classList.remove('break');
+    if(container.children.length > 0 ){
+
+        for(const b of oldBreaks){
+            container.children[b[0]].children[b[1]].classList.remove('break');
+        }
+    
+        for(const b of breaks){
+            container.children[b[0]].children[b[1]].classList.add('break');
         }
     }
-
-    for(const b of breaks){
-        container.children[b[0]].children[b[1]].classList.add('break');
-    }
+    oldBreaks =  breaks.slice();   
 }
 
 </script>
@@ -98,7 +109,7 @@ $: if(container){
     class:shadow = {activeMove}
     use:longpress = {1600}
     use:moving = {activeMove} 
-    on:longpress = {()=>(activeMove = activeMove? false : true)}
+    on:longpress = {()=>{activeMove = !activeMove}}
     on:moving ={handleMoving}
     on:moveEnd = {handleEnd}
     on:moveStart = {handleStart}
@@ -138,7 +149,12 @@ $: if(container){
 }
 
 :global(.break){
-    background-color:#CC79A7;
+    background-image: repeating-linear-gradient(
+    to left,
+    #CC79A7 0 8px,
+    rgba(255, 255, 255, 0) 8px 16px
+  );
+    /* background-color:#CC79A7; */
 }
 
 :global(.mini-container){
