@@ -65,7 +65,7 @@ $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
 //Uses frame size (9px) should prolly make that a setting somewhere
 $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units.length}% ${frameSize}px`;
 
-$: console.log(fBreaks)
+// $: console.log(fBreaks)
 </script>
 <!------------------------------------------------------------------------------------->
 
@@ -131,7 +131,7 @@ $: console.log(fBreaks)
 
 <style>
 
-/* Is not fully PROGRAMMATIC in temrs of frameSize */
+/* Is not fully PROGRAMMATIC in terms of frameSize */
 .container-visual{
     display:grid;
     column-gap:0px;
@@ -146,7 +146,7 @@ $: console.log(fBreaks)
                         rgba(23, 25, 143, 0) 5.5px 9px);
 
     background-size: 50% 9px;
-    width:100vw;
+    width:100%;
 }
 
 .container-controls{

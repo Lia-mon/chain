@@ -228,7 +228,7 @@ export function breakMerge(unitFrames: Hit[][],
             
         }
         
-        unit = sizes[`${big}`][0]; // has to be just one if it's bigger than smallBig :b
+        unit = sizes[`${big}`][0]; // current unit goes to the unit with the biggest pack frame that comes first.
         
         if(big > smallBig){
             for(let k = smallBig ; k < big ; k++){

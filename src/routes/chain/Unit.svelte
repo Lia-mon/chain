@@ -226,12 +226,6 @@ $:{for(const f of unitHits){
     flex:1;
 }
 
-.unit-settings{
-    display: inline-block;
-    background: url('../../images/gear-svgrepo-com.svg') no-repeat 10% 50%;
-    background-size:contain;
-    background-color:unset;
-}
 
 button{
     font-weight: bold;
@@ -244,6 +238,12 @@ button{
 
 
 /* Element selection stuff unused for nwo */
+.unit-settings{
+    display: inline-block;
+    background: url('../../images/gear-svgrepo-com.svg') no-repeat 10% 50%;
+    background-size:contain;
+    background-color:unset;
+}
 .selection-labels{
     display: flex;
     justify-content: space-around;
@@ -258,4 +258,5 @@ button{
     justify-content: space-around;
     border: 1px solid black;
 }
+
 </style>
