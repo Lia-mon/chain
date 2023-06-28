@@ -1,5 +1,5 @@
 <script lang="ts">
-    let timer : number;
+    let timer : any;
     let count = 0;
     let typed = '';
     function increment(){
@@ -11,6 +11,7 @@
             typed = (e.target as HTMLInputElement).value;
         },wait)
     }
+    
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -22,7 +23,7 @@
 <p>{typed.toUpperCase()}</p>
 
 <div class='boxy'>
-Boxy
+    Boxy
 </div>
 
 
