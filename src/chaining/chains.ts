@@ -143,7 +143,6 @@ export function breakMerge(unitFrames: Hit[][],
     
     let unit : number = 0 ;
     let lastUnit : number = 0;
-    let carry : number = 0;
     let lastFrame : number = 0;
     
     const groupSize = (unit:number, lastFrame : number) =>{
@@ -178,7 +177,6 @@ export function breakMerge(unitFrames: Hit[][],
 
     lastUnit = -1;
     lastFrame = Math.min(...delays) ;
-    let counter = 0;
 
     while(index.some((e,i)=>e < unitFrames[i].length)){ //scary scary loop :B
     

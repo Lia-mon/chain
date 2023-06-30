@@ -1,6 +1,6 @@
 <script lang="ts">
-import type {Hit, Break} from '../../chaining/chains.js'
-import { longpress, moving} from '../../actions/pressmove.js'
+import type {Hit, Break} from '../chaining/chains.js'
+import { longpress, moving} from '../actions/pressmove.js'
 
 export let frames : Array<Hit>;
 export let delay :number = 0;

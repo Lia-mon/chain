@@ -1,9 +1,9 @@
 <script lang="ts">
 import UnitFrames from './UnitFrames.svelte';
-import { units, unitFrames,delays } from '../../stores.js'
+import { units, unitFrames,delays } from '../stores.js'
 import  { slide } from 'svelte/transition'
-import type { Hit } from '../../chaining/chains.js';
-import { breakMerge } from '../../chaining/chains.js';
+import type { Hit } from '../chaining/chains.js';
+import { breakMerge } from '../chaining/chains.js';
 
 let directFrames : Array<Hit[]> = Array(6).fill([]);
 let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are tied to priority)
@@ -59,6 +59,8 @@ $:{
 }
 
 $: topMax = Math.max(...topDiffs);
+
+// $: delayMin = Math.min(...$units.map(u=>$delays[u]).filter(e=>e>0));
 
 $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
 
@@ -192,7 +194,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     justify-content: space-evenly;
 }
 
-.infobar button{
+/* .infobar button{
     width: 20px;
     height: 25px;
     display: inline-flex;
@@ -205,6 +207,6 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 }
 
 .infobar span{
-    /* margin-inline-end: 3px; */
-}
+  
+} */
 </style>

@@ -1,45 +1,65 @@
 <script lang="ts">
-    let timer : any;
-    let count = 0;
-    let typed = '';
-    function increment(){
-        count = count + 1;
+import Unit from './Unit.svelte';
+import Framer from './Framer.svelte';
+
+// import { breaks } from '../../chaining/chains.js'
+import { units, delays } from '../stores.js'
+
+function addUnit(){
+    const max = 6;
+    if($units.length >= max){
+        return;
     }
-    const debounce = (wait : number) => (e : Event)=> {
-        clearTimeout(timer);
-        timer = setTimeout(()=>{
-            typed = (e.target as HTMLInputElement).value;
-        },wait)
+
+    const pick = [0,1,2,3,4,5].find(e=>!$units.includes(e));
+
+    if(pick !== undefined){
+        units.update(e=>[...e,pick]);
+        $delays[pick]=0;
     }
-    
+}
+
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<p>Look at this thing {count}</p>
-<button on:click={increment}>Click me</button>
-<input type="text" on:input={debounce(500)}> 
-<p>I make what you typed BIG</p>
-<p>{typed.toUpperCase()}</p>
+<!-- HTML HERE -->
 
-<div class='boxy'>
-    Boxy
+<div class='wrapper'>
+    <button on:click={addUnit}>Add a unit + </button>
+    <div class='unit-flex' >
+    
+    {#each $units as uid (uid)}
+        <Unit uid={uid} priority={$units.findIndex(e=>e===uid)} ></Unit>
+    {/each}
+    </div>
+    
+    <hr>
+    <Framer></Framer>
 </div>
 
 
+
+
+
+<!-- css STARTS HERE -->
 <style>
-
-.boxy{
-    width:300px;
-    height:300px;
-    /* text-align: center; */
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin:0 auto;
-
-    box-shadow: 0 0 10px 0px red;
+button{
+    line-height: 2.5em;
+    font-size: larger;
+    width: 100%;
+    font-weight: bold;
+}
+.unit-flex{
+    display:flex;
+    /* width:876px; */
+    flex-direction: column;
+    margin: 0 auto;
+    /* margin-top: 12px; */
+    /* align-items: center; */
+    justify-content: space-around;
 }
 
+.wrapper{
+    max-width:850px;
+    margin: 0 auto;
+}
 </style>
