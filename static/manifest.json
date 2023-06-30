@@ -1,5 +1,5 @@
 {
-    "start-url" : "/",
+    "start_url" : "/",
     "name": "Chain visualiser for FFBE",
     "icons": [
       {
@@ -9,7 +9,6 @@
         "purpose" : "any maskable"
       }
     ],
-    "scope": "/",
     "display" : "standalone",
     "prefer_related_applications" : false,
     "theme_color": "#ffffff",
