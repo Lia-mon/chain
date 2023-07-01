@@ -182,7 +182,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 .infobar{
     /* padding-inline-start: 35px; */
     text-indent: 10px;
-    font-size: 18px;
+    font-size: min(4vw,30px);
     background-color: rgb(250, 250, 250);
     writing-mode: vertical-rl;
     text-orientation: mixed;

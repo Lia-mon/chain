@@ -130,7 +130,7 @@ $:{for(const f of unitHits){
 
 </script>
 
-<div class='unit'  transition:stretch="{{duration: 400}}">
+<fieldset class='unit'  transition:stretch="{{duration: 400}}">
     <!-- Casts {casts} -->
     <h1>Priority {priority+1} | {unitName}</h1>
     <div class='unit-buttons'>
@@ -173,7 +173,7 @@ $:{for(const f of unitHits){
     </div>
     {/each}
 
-</div>
+</fieldset>
 
 <style>
 *{

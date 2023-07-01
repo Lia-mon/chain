@@ -163,6 +163,7 @@ $: if(container){
     width: 100%;
     position: relative;
     padding: 0px 2.5px;
+    will-change: padding-top;
 }
 
 :global(.mini-container > *){
