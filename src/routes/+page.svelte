@@ -3,7 +3,7 @@ import Unit from './Unit.svelte';
 import Framer from './Framer.svelte';
 
 // import { breaks } from '../../chaining/chains.js'
-import { units, delays } from '../stores.js'
+import { units, delays } from '$lib/stores.js'
 
 function addUnit(){
     const max = 6;

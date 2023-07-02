@@ -1,9 +1,9 @@
 <script lang="ts">
-import { units,unitFrames } from '../stores.js';
-import type { Hit } from '../chaining/chains.js';
-import { chains } from '../chaining/chainData.js'
+import { units,unitFrames } from '$lib/stores.js';
+import type { Hit } from '$lib/chaining/chains.js';
+import { chains } from '$lib/chaining/chainData.js'
 
-import { stretch, hstretch } from '../chaining/transitions.js';
+import { stretch, hstretch } from '$lib/chaining/transitions.js';
 
 
 export let uid = 1 ;

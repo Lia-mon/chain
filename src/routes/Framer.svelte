@@ -1,9 +1,9 @@
 <script lang="ts">
 import UnitFrames from './UnitFrames.svelte';
-import { units, unitFrames,delays } from '../stores.js'
+import { units, unitFrames,delays } from '$lib/stores.js'
 import  { slide } from 'svelte/transition'
-import type { Hit } from '../chaining/chains.js';
-import { breakMerge } from '../chaining/chains.js';
+import type { Hit } from '$lib/chaining/chains.js';
+import { breakMerge } from '$lib/chaining/chains.js';
 
 let directFrames : Array<Hit[]> = Array(6).fill([]);
 let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are tied to priority)
