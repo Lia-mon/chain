@@ -1,5 +1,5 @@
 <script lang="ts">
-import { units,unitFrames } from '$lib/stores.js';
+import { units,unitFrames, unitNames } from '$lib/stores.js';
 import type { Hit } from '$lib/chaining/chains.js';
 import { chains } from '$lib/chaining/chainData.js'
 
@@ -14,6 +14,7 @@ let castFlags : number[] = [];
 let tagCasts :boolean[] = Array(5).fill(false);
 
 let unitHits : Hit[] = [];
+
 let unitName = `Unit ${uid+1}`;
 
 
@@ -132,7 +133,19 @@ $:{for(const f of unitHits){
 
 <fieldset class='unit'  transition:stretch="{{duration: 400}}">
     <!-- Casts {casts} -->
-    <h1>Priority {priority+1} | {unitName}</h1>
+    <div class='naming'>
+        {priority+1}.
+        {$unitNames[uid]}
+
+        <!--
+        <label for="unitname">{priority+1}. </label>
+        <input 
+            type="text" bind:value={$unitNames[uid]}
+            id='unitname'
+        > 
+        -->
+    </div>
+
     <div class='unit-buttons'>
         <!-- <button class='unit-settings'>{uid} </button> -->
         <button on:click={killSwitch}>x</button>
@@ -143,14 +156,17 @@ $:{for(const f of unitHits){
     {#each range(casts) as id}
     <div 
         class = 'cast-selection'
-        transition:stretch|local="{{duration: 400}}">
+        transition:stretch|local="{{duration: 400}}"
+    >
 
         <input type="checkbox" class='checky' bind:checked={tagCasts[id]}>
+
         <select 
             name={`${uid}-cast${id}`} 
             id={`${uid}-cast${id}`} 
             class ='selection-menu'
-            on:change = {handleSelection(id)}>
+            on:change = {handleSelection(id)}
+        >
 
             <option value= ''>Empty</option>
 
@@ -159,6 +175,7 @@ $:{for(const f of unitHits){
             {/each}
 
             <option value= '-1'>Custom</option>
+
         </select>
 
         {#if castFlags.includes(id)}
@@ -168,7 +185,8 @@ $:{for(const f of unitHits){
                 inputmode="numeric" 
                 placeholder=""
                 class="frame-input"
-                on:change={handleCustom(id)}>
+                on:change={handleCustom(id)}
+            />
         {/if}
     </div>
     {/each}
@@ -211,10 +229,24 @@ $:{for(const f of unitHits){
     box-sizing:border-box;
     text-align: center;
     margin: 5px 0;
-    padding: 5px 0;
+    padding: 5px 5px;
 
     box-shadow: 0px 0px 1px black;
 
+}
+
+.naming{
+    font-size: larger;
+    /* font-weight: bold; */
+    margin: 9px 0;
+}
+
+.naming input{
+    width:80%;
+    padding: 0 0 0 0;
+    text-align: center;
+    border-width: 1px;
+    box-sizing: border-box;
 }
 
 .unit-buttons{
@@ -237,7 +269,8 @@ button{
 }
 
 
-/* Element selection stuff unused for nwo */
+/* Element selection stuff unused for now? */
+/* 
 .unit-settings{
     display: inline-block;
     background: url('../../images/gear-svgrepo-com.svg') no-repeat 10% 50%;
@@ -257,6 +290,8 @@ button{
     display: flex;
     justify-content: space-around;
     border: 1px solid black;
-}
+} 
+
+*/
 
 </style>

@@ -17,6 +17,7 @@ const frameSize = 9;
 
 let expand = false;
 
+let results = [];
 
 const countBreaks=(as: Array<Array<any>>):number =>{
     let s = 0;
@@ -60,14 +61,23 @@ $:{
 
 $: topMax = Math.max(...topDiffs);
 
-// $: delayMin = Math.min(...$units.map(u=>$delays[u]).filter(e=>e>0));
-
 $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
 
+// TODO : finish the smol ordering, remember what goes where
+
+// $:{
+//     const u = $units[i];
+//     const index = Number(i);
+
+
+// }
+
+
 //Uses frame size (9px) should prolly make that a setting somewhere
+
 $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units.length}% ${frameSize}px`;
 
-// $: console.log(fBreaks)
+
 </script>
 <!------------------------------------------------------------------------------------->
 
@@ -81,7 +91,8 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     {/each}
 </div>
 
-<hr>
+
+<!-- 
 
 <div>
     {#each $units as unit,i}
@@ -89,9 +100,10 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
             Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
         </div>
     {/each}
-</div>
+</div> 
 
-<hr>
+-->
+
 
  {#if ($units.length > 0)}
 <div class='container-visual' 
@@ -147,13 +159,14 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
                         rgb(100, 100, 100) 4px 5px,
                         rgba(23, 25, 143, 0) 5.5px 9px);
 
-    background-size: 50% 9px;
     width:100%;
 }
 
 .container-controls{
     display: flex;
     flex-direction: column;
+
+    display:none;
 }
 
 .control{
@@ -183,7 +196,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     /* padding-inline-start: 35px; */
     text-indent: 10px;
     font-size: min(4vw,30px);
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(236, 236, 236);
     writing-mode: vertical-rl;
     text-orientation: mixed;
     position: sticky;

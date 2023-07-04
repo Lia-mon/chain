@@ -3,7 +3,7 @@ import Unit from './Unit.svelte';
 import Framer from './Framer.svelte';
 
 // import { breaks } from '../../chaining/chains.js'
-import { units, delays } from '$lib/stores.js'
+import { units, delays, unitNames } from '$lib/stores.js'
 
 function addUnit(){
     const max = 6;
@@ -15,32 +15,39 @@ function addUnit(){
 
     if(pick !== undefined){
         units.update(e=>[...e,pick]);
+
+        $unitNames[pick] = `Unit ${pick+1}`
         $delays[pick]=0;
     }
 }
 
+function showHelp(){
+    return;
+}
+
 </script>
 
-<!-- HTML HERE -->
 
 <div class='wrapper'>
-    <button on:click={addUnit}>Add a unit + </button>
-    <div class='unit-flex' >
-    
-    {#each $units as uid (uid)}
-        <Unit uid={uid} priority={$units.findIndex(e=>e===uid)} ></Unit>
-    {/each}
+    <div class='flex-h'>
+
+        <button on:click={showHelp}>How to use</button>
+        <button on:click={addUnit}>Add a unit</button>
+
     </div>
-    
-    <hr>
+
+    <div class='unit-flex' >  
+
+        {#each $units as uid (uid)}
+            <Unit uid={uid} priority={$units.findIndex(e=>e===uid)} ></Unit>
+        {/each}
+
+    </div>
+ 
     <Framer></Framer>
 </div>
 
 
-
-
-
-<!-- css STARTS HERE -->
 <style>
 button{
     line-height: 2.5em;
@@ -53,13 +60,22 @@ button{
     /* width:876px; */
     flex-direction: column;
     margin: 0 auto;
-    /* margin-top: 12px; */
+    margin-bottom: 5px;
     /* align-items: center; */
     justify-content: space-around;
 }
 
 .wrapper{
-    max-width:850px;
     margin: 0 auto;
+}
+
+.flex-h{
+    display:flex;
+    margin-bottom: 5px;
+}
+
+:global(body){
+    /* background-color: rgb(255, 207, 255); */
+    max-width:850px;
 }
 </style>
