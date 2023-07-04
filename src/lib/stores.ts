@@ -2,7 +2,6 @@ import { writable, type Writable } from "svelte/store";
 
 interface Hit{
     frame : number;
-    elements : boolean[];
     unit: number; //display
     cast: number;
     tag: boolean;

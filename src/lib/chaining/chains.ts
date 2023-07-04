@@ -1,6 +1,5 @@
 export interface Hit{
     frame : number;
-    elements : boolean[];
     unit: number; //display
     cast: number;
     tag: boolean;
@@ -114,7 +113,6 @@ export function merger(unitFrames: Hit[][],
 
             merged.push({
                 frame :currentFrame,
-                elements :unitFrames[lastIndex][indexes[lastIndex]].elements,
                 unit :unitFrames[lastIndex][indexes[lastIndex]].unit,
                 cast :unitFrames[lastIndex][indexes[lastIndex]].cast,
                 tag : unitFrames[lastIndex][indexes[lastIndex]].tag

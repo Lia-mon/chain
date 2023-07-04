@@ -6,10 +6,10 @@ import type { Hit } from '$lib/chaining/chains.js';
 import { breakMerge } from '$lib/chaining/chains.js';
 
 let directFrames : Array<Hit[]> = Array(6).fill([]);
-let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are tied to priority)
+let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are also tied to priority)
 
 //delays tied to the unit
-//units units,index where index plays the role of priority
+//a unit's index plays the role of priority
 
 let containerVisual: HTMLDivElement;
 
@@ -17,7 +17,7 @@ const frameSize = 9;
 
 let expand = false;
 
-let results = [];
+let results : number[] = [];
 
 const countBreaks=(as: Array<Array<any>>):number =>{
     let s = 0;
@@ -49,12 +49,23 @@ const sanitize = (id:number)=>(e:Event)=>{
         $delays[id] = Number(node.value);
     }
 }
-    
+
+const compare = (delays:number[],topDiffs:number[])=>(index1:number,index2:number) : number=>{
+    const unit1 = $units[index1];
+    const unit2 = $units[index2];
+
+    return delays[unit1]+topDiffs[index2]-delays[unit2]-topDiffs[index1];
+}
+
 $:{
-    for(let i = 0 ; i < $units.length ; i++){
-        directFrames[i] = $unitFrames[i].slice().sort(inUnitCmp);
-        if(directFrames[i][0] !== undefined){
-            topDiffs[i] = directFrames[i][0].frame;
+    for(let i = 0 ; i < 6 ; i++){
+        if($unitFrames[i]){ 
+            directFrames[i] = $unitFrames[i].slice().sort(inUnitCmp);
+            if(directFrames[i][0]!== undefined){
+                topDiffs[i] = directFrames[i][0].frame ;     
+            }else{
+                topDiffs[i] = 0 ;     
+            }
         }
     }
 }
@@ -62,6 +73,11 @@ $:{
 $: topMax = Math.max(...topDiffs);
 
 $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
+
+$:{
+    results = Array($units.length).fill(0).map((a,i)=>i);
+    results.sort(compare($delays,topDiffs));
+}
 
 // TODO : finish the smol ordering, remember what goes where
 
@@ -92,7 +108,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 </div>
 
 
-<!-- 
+
 
 <div>
     {#each $units as unit,i}
@@ -102,7 +118,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     {/each}
 </div> 
 
--->
+
 
 
  {#if ($units.length > 0)}
@@ -126,15 +142,17 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
         class:expand> 
 
         <span>There's {countBreaks(fBreaks)} breaks.</span>
-        {#each $units as unit,i}
-            <span>p{i+1}:{$delays[unit]-topDiffs[i]+topMax} </span> 
+        {#each results as i}
+            <span class='result'>p{i+1}:{$delays[$units[i]]-topDiffs[i]+topMax} </span>
         {/each}
+
     <!-- 
         <button class='infobuttons'
             on:click={()=>{expand=!expand}}
             >
             {expand? '-' : '+'}
-        </button> -->
+        </button> 
+    -->
 
     </div>
 </div>
@@ -196,15 +214,23 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     /* padding-inline-start: 35px; */
     text-indent: 10px;
     font-size: min(4vw,30px);
-    background-color: rgb(236, 236, 236);
+    background-color: rgb(248, 248, 248);
     writing-mode: vertical-rl;
     text-orientation: mixed;
     position: sticky;
     top:0;
     right:0;
     max-height:100vh;
-    display: flex;
+    /* display: flex; */
     justify-content: space-evenly;
+}
+
+.infobar .result::after{
+    content: '→ ';
+}
+
+.infobar .result:last-child::after{
+    content: '';
 }
 
 /* .infobar button{

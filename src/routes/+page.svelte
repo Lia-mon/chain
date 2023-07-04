@@ -2,9 +2,9 @@
 import Unit from './Unit.svelte';
 import Framer from './Framer.svelte';
 
-// import { breaks } from '../../chaining/chains.js'
+// import { breaks } from '$lib/chaining/chains.js'
+
 import { units, delays, unitNames } from '$lib/stores.js'
-    import { prevent_default } from 'svelte/internal';
 
 function addUnit(){
     const max = 6;
@@ -22,15 +22,48 @@ function addUnit(){
     }
 }
 
-let showHelp = true;
+let showHelp = false;
 
 </script>
 
-{#if showHelp}
-    <div class=help>
-        <button on:click={()=>{showHelp = !showHelp}}>x</button>
-    </div>
-{/if}
+
+<div class={`help ${showHelp ? 'visible' : ''}`}>
+    <button class='exit' on:click={()=>{showHelp = !showHelp}}>X</button>
+    <p>
+        You can add up to 6 units. 
+        You can remove a unit by clicking the [X] button on the unit card.
+    </p>
+    <p>
+        You can add up to 5 casts for each unit using the [+] button 
+        and remove a cast at the end with the [-] button. 
+        Ticking the checkbox makes an ability be TAG, i.e. allow self-chaining.
+    </p>
+    <p>
+        You can also add an ability with Custom frames. 
+        There are 2 acceptables formats. Comma (,) and dash(-) seperated. e.g.
+    </p>
+    <ul>
+        <li>
+            BS: "42,48,54,60,66,72,78,84,90"
+        </li>
+        <li>
+            BS: "42-6-6-6-6-6-6-6-6"
+        </li>
+    </ul>
+    <p>
+        The selected skills can be seen at the bottom, 
+        each cast is represented with a different colour.
+        Breaks get red-ish stripes on them. 
+        The unit order on the grid is from left to right, 
+        like this 1&rightarrow;2&rightarrow;3 etc based on priority.
+    </p>
+    <p>
+        You can press hold on a unit's frames on the grid 
+        to unlock them and make them movable. 
+        If you long press again they lock.
+    </p>
+</div>
+
 
 <div class='wrapper'>
     <div class='flex-h'>
@@ -70,6 +103,7 @@ button{
 }
 
 .wrapper{
+    max-width:850px;
     margin: 0 auto;
 }
 
@@ -79,19 +113,25 @@ button{
 }
 
 .help{
+    display: none;
     position: fixed;
     top:0%;
     left:0%;
     width: 80%;
     height:80%;
+    overflow-y: auto;
     background-color: rgba(241, 241, 241, 0.95);
     z-index: 10;
     transform: translate(10%,10%);
     /* border: 2px solid gray; */
-    box-shadow: black 0px 0px 12px;
+    box-shadow: black 0px 0px 9px;
 }
 
-.help button{
+.visible{
+    display:block;
+}
+
+.help .exit{
     width:25px;
     aspect-ratio: 1/1;
     position:absolute;
@@ -107,8 +147,12 @@ button{
     text-align: center;
 }
 
-:global(body){
-    /* background-color: rgb(255, 207, 255); */
-    max-width:850px;
+.help p{
+    width: 80%;
+    margin:5% auto;
 }
+.help p:first-of-type{
+    margin-top: 15%;
+}
+
 </style>

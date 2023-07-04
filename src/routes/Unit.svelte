@@ -1,5 +1,5 @@
 <script lang="ts">
-import { units,unitFrames, unitNames } from '$lib/stores.js';
+import { units,unitFrames, unitNames, delays } from '$lib/stores.js';
 import type { Hit } from '$lib/chaining/chains.js';
 import { chains } from '$lib/chaining/chainData.js'
 
@@ -45,8 +45,8 @@ const handleSelection = (id:number) => (e : Event) =>{
             frame: f+id*(castOffset+castDelay), 
             unit: priority, 
             cast: id, 
-            tag: tagCasts[id], 
-            elements : []} 
+            tag: tagCasts[id]
+        } 
         
         return hit
         }
@@ -82,8 +82,8 @@ const handleCustom = (id:number) => (e : Event) =>{
         frame: f+id*(castOffset+castDelay), 
         unit: priority, 
         cast: id, 
-        tag: tagCasts[id], 
-        elements : []} 
+        tag: tagCasts[id]
+        }
     
         return hit;
         }));
@@ -94,6 +94,8 @@ const handleCustom = (id:number) => (e : Event) =>{
 
 function killSwitch(){
     // unitHits = [];
+    $unitFrames[uid] = [];
+    $delays[uid] = 0;
     units.update(e=>e.filter(e=>e!==uid));
 }
 

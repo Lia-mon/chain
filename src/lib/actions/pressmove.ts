@@ -1,5 +1,5 @@
 export function longpress(node :HTMLElement, duration :number) {
-	let timer : number;
+	let timer : any;
     let currentX = 0;
     let currentY = 0;
 
