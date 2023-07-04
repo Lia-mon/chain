@@ -4,6 +4,7 @@ import Framer from './Framer.svelte';
 
 // import { breaks } from '../../chaining/chains.js'
 import { units, delays, unitNames } from '$lib/stores.js'
+    import { prevent_default } from 'svelte/internal';
 
 function addUnit(){
     const max = 6;
@@ -21,17 +22,20 @@ function addUnit(){
     }
 }
 
-function showHelp(){
-    return;
-}
+let showHelp = true;
 
 </script>
 
+{#if showHelp}
+    <div class=help>
+        <button on:click={()=>{showHelp = !showHelp}}>x</button>
+    </div>
+{/if}
 
 <div class='wrapper'>
     <div class='flex-h'>
 
-        <button on:click={showHelp}>How to use</button>
+        <button on:click={()=>{showHelp = !showHelp}}>How to use</button>
         <button on:click={addUnit}>Add a unit</button>
 
     </div>
@@ -72,6 +76,35 @@ button{
 .flex-h{
     display:flex;
     margin-bottom: 5px;
+}
+
+.help{
+    position: fixed;
+    top:0%;
+    left:0%;
+    width: 80%;
+    height:80%;
+    background-color: rgba(241, 241, 241, 0.95);
+    z-index: 10;
+    transform: translate(10%,10%);
+    /* border: 2px solid gray; */
+    box-shadow: black 0px 0px 12px;
+}
+
+.help button{
+    width:25px;
+    aspect-ratio: 1/1;
+    position:absolute;
+    right:5%;
+    top:2%;
+    font-size: 20px;
+    line-height:0;
+    font-weight: 100;
+    padding: 0;
+    border-radius: 0;
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 0.836);
+    text-align: center;
 }
 
 :global(body){

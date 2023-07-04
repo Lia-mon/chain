@@ -15,9 +15,6 @@ let tagCasts :boolean[] = Array(5).fill(false);
 
 let unitHits : Hit[] = [];
 
-let unitName = `Unit ${uid+1}`;
-
-
 const castDelay  = 39;
 const castOffset = 14;
 
@@ -237,7 +234,7 @@ $:{for(const f of unitHits){
 
 .naming{
     font-size: larger;
-    /* font-weight: bold; */
+    font-weight: 600;
     margin: 9px 0;
 }
 
