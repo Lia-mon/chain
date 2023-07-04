@@ -1,6 +1,6 @@
 <script lang="ts">
 import UnitFrames from './UnitFrames.svelte';
-import { units, unitFrames,delays } from '$lib/stores.js'
+import { units, unitFrames,delays, unitNames } from '$lib/stores.js'
 import  { slide } from 'svelte/transition'
 import type { Hit } from '$lib/chaining/chains.js';
 import { breakMerge } from '$lib/chaining/chains.js';
@@ -97,23 +97,15 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 </script>
 <!------------------------------------------------------------------------------------->
 
-<div class='container-controls'>
+
+<div class='container-controls'
+    style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
+>
     {#each $units as unit,i (unit) }
         <div class='control'>
-            <label for='{`prio-${i}`}'>{`Delay for prio ${i+1} | unit ${unit+1}`}</label>
-            <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'>
-            <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0'>
-        </div>
-    {/each}
-</div>
-
-
-
-
-<div>
-    {#each $units as unit,i}
-        <div>
-            Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
+            <label for='{`prio-${i}`}'>{`${$unitNames[unit]}:`}</label>
+            <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}>
+            <!-- <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'> -->
         </div>
     {/each}
 </div> 
@@ -121,7 +113,22 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 
 
 
- {#if ($units.length > 0)}
+
+<!-- 
+<div>
+    {#each $units as unit,i}
+        <div>
+            Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
+            <input type="number" bind:value={$delays[unit]} min=0 on:input={sanitize(unit)}>
+        </div>
+    {/each}
+</div>  
+-->
+
+
+
+
+{#if ($units.length > 0)}
 <div class='container-visual' 
      style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
      transition:slide="{{axis : 'x'}}"
@@ -145,14 +152,6 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
         {#each results as i}
             <span class='result'>p{i+1}:{$delays[$units[i]]-topDiffs[i]+topMax} </span>
         {/each}
-
-    <!-- 
-        <button class='infobuttons'
-            on:click={()=>{expand=!expand}}
-            >
-            {expand? '-' : '+'}
-        </button> 
-    -->
 
     </div>
 </div>
@@ -181,28 +180,37 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 }
 
 .container-controls{
-    display: flex;
-    flex-direction: column;
+    /* grid-template-columns: repeat(3,1fr); */
+    
+    display: grid;
 
-    display:none;
+    flex-wrap:wrap;
+
+    flex-direction: row;
+    width:100%;
+    /* display:none; */
+    margin: 1em auto;
 }
 
 .control{
-    padding: 1em 0;
-    /* margin-top:1em; */
-    display:flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    border-bottom: 1px solid black;
+    display:block;
+    /* padding: 1em 1em; */
+    width:100%;
+    /* border-bottom: 1px solid black; */
 }
 
 .control > *{
     font-size: large;
     /* flex:1; */
-    width:300px;
-    height:2em;
+    /* width:80%; */
+    height:1em;
     text-align: center;
+    vertical-align:text-bottom;
+}
+
+.control input{
+    max-width:5ch;
+    width: min-content;
 }
 
 .control:last-child{
@@ -212,6 +220,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 
 .infobar{
     /* padding-inline-start: 35px; */
+
     text-indent: 10px;
     font-size: min(4vw,30px);
     background-color: rgb(248, 248, 248);
@@ -221,6 +230,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     top:0;
     right:0;
     max-height:100vh;
+
     /* display: flex; */
     justify-content: space-evenly;
 }

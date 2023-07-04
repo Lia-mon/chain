@@ -65,7 +65,7 @@ let showHelp = false;
 </div>
 
 
-<div class='wrapper'>
+<div class={`wrapper ${showHelp ? 'unclick' : ''}`}>
     <div class='flex-h'>
 
         <button on:click={()=>{showHelp = !showHelp}}>How to use</button>
@@ -131,6 +131,15 @@ button{
     display:block;
 }
 
+.unclick{
+    pointer-events: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .help .exit{
     width:25px;
     aspect-ratio: 1/1;
@@ -143,7 +152,7 @@ button{
     padding: 0;
     border-radius: 0;
     border: 1px solid black;
-    background-color: rgba(255, 255, 255, 0.836);
+    background-color: rgba(255, 255, 255, 0.85);
     text-align: center;
 }
 
