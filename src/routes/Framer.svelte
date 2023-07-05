@@ -98,28 +98,28 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 <!------------------------------------------------------------------------------------->
 
 
-<div class='container-controls'
+<!-- <div class='container-controls'
     style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
 >
     {#each $units as unit,i (unit) }
         <div class='control'>
             <label for='{`prio-${i}`}'>{`${$unitNames[unit]}:`}</label>
             <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}>
-            <!-- <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'> -->
         </div>
-    {/each}
+        {/each}
 </div> 
-
-
-
-
-
-<!-- 
-<div>
-    {#each $units as unit,i}
+     -->
+    
+    
+    
+    
+    <!-- 
         <div>
-            Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
-            <input type="number" bind:value={$delays[unit]} min=0 on:input={sanitize(unit)}>
+            {#each $units as unit,i}
+            <div>
+                Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
+                <input type="number" bind:value={$delays[unit]} min=0 on:input={sanitize(unit)}>
+                <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'> 
         </div>
     {/each}
 </div>  
