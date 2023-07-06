@@ -62,6 +62,11 @@ let showHelp = false;
         to unlock them and make them movable. 
         If you long press again they lock.
     </p>
+    <p>
+        There's a vertical (sorry) infobar that displays
+        how many breaks there are and each unit is fired off
+        in absolute frames based on priority.
+    </p>
 </div>
 
 

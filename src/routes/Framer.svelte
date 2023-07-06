@@ -7,17 +7,26 @@ import { breakMerge } from '$lib/chaining/chains.js';
 
 let directFrames : Array<Hit[]> = Array(6).fill([]);
 let topDiffs = Array(6).fill(0); //tied to priority, updated when frames change (which are also tied to priority)
+let topMax = 0;
 
 //delays tied to the unit
 //a unit's index plays the role of priority
 
+
+//reference to the big container, used to dynamically adjust the grid columns
 let containerVisual: HTMLDivElement;
 
+//used to decide the size of the drawn frames, grids and other elements depend on this too.
 const frameSize = 9;
 
+//unused / possibly has use to expand the infobar. abandoned. 
 let expand = false;
 
+//Used to store the starting frame for each unit
 let results : number[] = [];
+let leading : number = 0;
+
+
 
 const countBreaks=(as: Array<Array<any>>):number =>{
     let s = 0;
@@ -27,6 +36,7 @@ const countBreaks=(as: Array<Array<any>>):number =>{
     return s;
 }
 
+//used to sort a unit's frames before being passed to the renderer and break function
 const inUnitCmp = (h1 : Hit ,h2 : Hit)=>{
         if(h1.frame !== h2.frame){
             return h1.frame - h2.frame;
@@ -39,6 +49,7 @@ const inUnitCmp = (h1 : Hit ,h2 : Hit)=>{
         return 0;
 }
 
+//makes sure no negative values get in the numerical input elements
 const sanitize = (id:number)=>(e:Event)=>{
     e.preventDefault();
     if(!e.target){
@@ -50,12 +61,15 @@ const sanitize = (id:number)=>(e:Event)=>{
     }
 }
 
+//another comparison function, this time compares the 'true' delay between unit presses
 const compare = (delays:number[],topDiffs:number[])=>(index1:number,index2:number) : number=>{
     const unit1 = $units[index1];
     const unit2 = $units[index2];
 
     return delays[unit1]+topDiffs[index2]-delays[unit2]-topDiffs[index1];
 }
+
+//Reactive calculations
 
 $:{
     for(let i = 0 ; i < 6 ; i++){
@@ -70,24 +84,25 @@ $:{
     }
 }
 
-$: topMax = Math.max(...topDiffs);
+$: {
+    topMax = 0; 
+    for(let i = 0; i < $units.length ; i++){
+        const thingy = topDiffs[i] - $delays[$units[i]];
+        if(topMax < thingy){
+            topMax = thingy;
+        }
+    }
+}
 
 $: fBreaks =  breakMerge(directFrames,$units.length,$delays,topDiffs);
 
 $:{
     results = Array($units.length).fill(0).map((a,i)=>i);
     results.sort(compare($delays,topDiffs));
+    if(results.length > 1){
+        leading = results[0];
+    }
 }
-
-// TODO : finish the smol ordering, remember what goes where
-
-// $:{
-//     const u = $units[i];
-//     const index = Number(i);
-
-
-// }
-
 
 //Uses frame size (9px) should prolly make that a setting somewhere
 
@@ -97,32 +112,37 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 </script>
 <!------------------------------------------------------------------------------------->
 
+<!-- 
+<label for="container-controls" class='header'>Position offset / change</label>
+ -->
 
-<!-- <div class='container-controls'
+<div class='container-controls'
     style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
+    id='container-controls'
 >
     {#each $units as unit,i (unit) }
+
         <div class='control'>
-            <label for='{`prio-${i}`}'>{`${$unitNames[unit]}:`}</label>
+            <label for='{`prio-${i}`}'>{`${$unitNames[unit]}`}</label>
             <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}>
         </div>
-        {/each}
+
+    {/each}
+
 </div> 
-     -->
-    
-    
-    
-    
-    <!-- 
+
+ <!-- 
+
+<div>
+    {#each $units as unit,i}
         <div>
-            {#each $units as unit,i}
-            <div>
                 Priority {i+1} is thrown after {Math.round($delays[unit])-topDiffs[i]+topMax} frames.
                 <input type="number" bind:value={$delays[unit]} min=0 on:input={sanitize(unit)}>
                 <input type="range" min='0' max='100' bind:value={$delays[unit]} name='{`prio-${i}`}'> 
         </div>
     {/each}
-</div>  
+</div>
+
 -->
 
 
@@ -146,11 +166,18 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 
     {/each}
     <div class='infobar'
-        class:expand> 
+        class:expand>
 
-        <span>There's {countBreaks(fBreaks)} breaks.</span>
+        <span>
+            There's {countBreaks(fBreaks) === 1 ? '1 break' : `${countBreaks(fBreaks)} breaks`}. 
+        </span>
+
         {#each results as i}
-            <span class='result'>p{i+1}:{$delays[$units[i]]-topDiffs[i]+topMax} </span>
+        
+            <span class='result'>
+                p{i+1}:{$delays[$units[i]]-topDiffs[i]+topMax} 
+            </span>
+
         {/each}
 
     </div>
@@ -163,6 +190,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 <style>
 
 /* Is not fully PROGRAMMATIC in terms of frameSize */
+/* Grid depends on some absolute numbers, we can rewrite this but meh :D*/
 .container-visual{
     display:grid;
     column-gap:0px;
@@ -181,11 +209,8 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 
 .container-controls{
     /* grid-template-columns: repeat(3,1fr); */
-    
     display: grid;
-
     flex-wrap:wrap;
-
     flex-direction: row;
     width:100%;
     /* display:none; */
@@ -193,24 +218,24 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 }
 
 .control{
-    display:block;
+    display:flex;
+    flex-direction: column;
     /* padding: 1em 1em; */
-    width:100%;
     /* border-bottom: 1px solid black; */
+    align-items: center;
 }
 
 .control > *{
     font-size: large;
-    /* flex:1; */
-    /* width:80%; */
-    height:1em;
+    height:1.1em;
     text-align: center;
     vertical-align:text-bottom;
 }
 
 .control input{
-    max-width:5ch;
-    width: min-content;
+    margin-top: 0.3em;
+    min-width: 4ch;
+    width:70%;
 }
 
 .control:last-child{
@@ -218,9 +243,10 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     border-bottom:none;
 }
 
+
 .infobar{
     /* padding-inline-start: 35px; */
-
+    
     text-indent: 10px;
     font-size: min(4vw,30px);
     background-color: rgb(248, 248, 248);
@@ -230,7 +256,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     top:0;
     right:0;
     max-height:100vh;
-
+    
     /* display: flex; */
     justify-content: space-evenly;
 }
@@ -253,9 +279,15 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     font-size: large;
     background-color: unset;
     border: 1px solid gray;
-}
-
-.infobar span{
-  
 } */
+
+ /* .header{
+    display: none;
+    font-weight: bolder;
+    margin:0 auto;
+    width:70%;
+    border-bottom: 1px solid black;
+    text-align: center;
+}  */
+
 </style>
