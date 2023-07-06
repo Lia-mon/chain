@@ -66,7 +66,7 @@ let showHelp = false;
     </p>
     <p>
         There's a vertical (sorry) infobar that displays
-        how many breaks there are and each unit is fired off
+        how many breaks there are and when each unit is fired off
         in absolute frames based on priority.
     </p>
 </div>
@@ -175,7 +175,7 @@ button{
 }
 
 .help p:first-of-type{
-    margin-top: calc(2%+30px);
+    margin-top: 8%;
 }
 
 </style>
