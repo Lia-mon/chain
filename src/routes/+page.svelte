@@ -31,16 +31,17 @@ let showHelp = false;
     <button class='exit' on:click={()=>{showHelp = !showHelp}}>X</button>
     <p>
         You can add up to 6 units. 
-        You can remove a unit by clicking the [X] button on the unit card.
+        To remove a unit click the [X] button on the unit card.
     </p>
     <p>
         You can add up to 5 casts for each unit using the [+] button 
-        and remove a cast at the end with the [-] button. 
-        Ticking the checkbox makes an ability be TAG, i.e. allow self-chaining.
+        and remove a cast with the [-] button. 
+        Ticking the associated checkbox makes an ability TAG, i.e. allow self-chaining.
     </p>
     <p>
-        You can also add an ability with Custom frames. 
-        There are 2 acceptables formats. Comma (,) and dash(-) seperated. e.g.
+        Custom frames accept two formats, comma (,) and dash(-) seperated.
+        The comma format is used to input the absolute frames for an ability, while
+        the dash seperated one is used for relative frames e.g.
     </p>
     
         <ul>
@@ -60,7 +61,7 @@ let showHelp = false;
         like this 1&rightarrow;2&rightarrow;3 etc based on priority.
     </p>
     <p>
-        You can press hold on a unit's frames on the grid 
+        You can long press on a unit's frames on the grid 
         to unlock them and make them movable. 
         If you long press again they lock.
     </p>
@@ -68,6 +69,9 @@ let showHelp = false;
         There's a vertical (sorry) infobar that displays
         how many breaks there are and when each unit is fired off
         in absolute frames based on priority.
+    </p>
+    <p>
+        Play around for more, I'm not good at explaining.
     </p>
 </div>
 
