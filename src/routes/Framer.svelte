@@ -173,7 +173,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
         </span>
 
         {#each results as i}
-        
+
             <span class='result'>
                 p{i+1}:{$delays[$units[i]]-topDiffs[i]+topMax} 
             </span>
@@ -248,7 +248,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     /* padding-inline-start: 35px; */
     
     text-indent: 10px;
-    font-size: min(4vw,30px);
+    font-size: min(4vw,29px);
     background-color: rgb(248, 248, 248);
     writing-mode: vertical-rl;
     text-orientation: mixed;

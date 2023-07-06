@@ -1,5 +1,6 @@
 {
-    "start_url" : "/",
+    "start_url" : "/chain",
+    "scope" : ".",
     "name": "Chain visualiser for FFBE",
     "icons": [
       {
