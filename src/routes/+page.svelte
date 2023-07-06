@@ -42,14 +42,16 @@ let showHelp = false;
         You can also add an ability with Custom frames. 
         There are 2 acceptables formats. Comma (,) and dash(-) seperated. e.g.
     </p>
-    <ul>
-        <li>
-            BS: "42,48,54,60,66,72,78,84,90"
-        </li>
-        <li>
-            BS: "42-6-6-6-6-6-6-6-6"
-        </li>
-    </ul>
+    
+        <ul>
+            <li>
+                BS: "42,48,54,60,66,72,78,84,90"
+            </li>
+            <li>
+                BS: "42-6-6-6-6-6-6-6-6"
+            </li>
+        </ul>
+    
     <p>
         The selected skills can be seen at the bottom, 
         each cast is represented with a different colour.
@@ -120,9 +122,10 @@ button{
 .help{
     display: none;
     position: fixed;
-    top:0%;
-    left:0%;
-    width: 80%;
+    top:50%;
+    left:50%;
+    max-width: calc(0.8*850px);
+    width:80%;
     height:80%;
     overflow-y: auto;
     background-color: rgba(241, 241, 241, 0.95);
@@ -130,6 +133,7 @@ button{
     transform: translate(10%,10%);
     /* border: 2px solid gray; */
     box-shadow: black 0px 0px 9px;
+    transform: translate(-50%,-50%);
 }
 
 .visible{
@@ -163,10 +167,15 @@ button{
 
 .help p{
     width: 80%;
-    margin:5% auto;
+    margin:1.5em auto;
 }
+.help ul{
+    width: 80%;
+    margin:1.5em auto;
+}
+
 .help p:first-of-type{
-    margin-top: 15%;
+    margin-top: calc(2%+30px);
 }
 
 </style>
