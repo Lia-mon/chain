@@ -21,9 +21,9 @@ const config = {
 			strict : true
 		}),
 
-		// paths:{
-		// 	base : dev ? '' : '/other-repo'
-		// }
+		paths:{
+			base : dev ? '' : process.env.BASE_PATH
+		}
 	}
 };
 
