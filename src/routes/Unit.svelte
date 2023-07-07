@@ -133,16 +133,17 @@ $:{for(const f of unitHits){
 <fieldset class='unit' transition:stretch="{{duration: 400}}">
     <!-- Casts {casts} -->
     <div class='naming'>
-        {priority+1}.
-        {$unitNames[uid]}
+        <!-- {priority+1}.
+        {$unitNames[uid]} -->
 
-        <!--
+        
         <label for="unitname">{priority+1}. </label>
         <input 
             type="text" bind:value={$unitNames[uid]}
             id='unitname'
+            maxlength="18"
         > 
-        -->
+       
     </div>
 
     <div class='unit-buttons'>
@@ -277,6 +278,17 @@ button{
     text-align: center;
     border: 1px solid gray;
     /* flex:1 1; */
+}
+
+.naming > * {
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+#unitname{
+    border:none;
+    border-bottom: 1px solid black;
+    min-width: 12ch;
 }
 
 /* Element selection stuff unused for now? */

@@ -122,9 +122,10 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 >
     {#each $units as unit,i (unit) }
 
-        <div class='control'>
-            <label for='{`prio-${i}`}'>{`${$unitNames[unit]}`}</label>
-            <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}>
+    <div class='control'>
+            {`${$unitNames[unit]}`}
+            <!-- <label for='{`prio-${i}`}'>{`${$unitNames[unit]}`}</label> -->
+            <!-- <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}> -->
         </div>
 
     {/each}
@@ -210,32 +211,33 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 .container-controls{
     /* grid-template-columns: repeat(3,1fr); */
     display: grid;
-    flex-wrap:wrap;
-    flex-direction: row;
+    grid-auto-rows:minmax(6ch,max-content);
     width:100%;
     /* display:none; */
     margin: 1em auto;
+    min-height:fit-content;
 }
 
 .control{
-    display:flex;
-    flex-direction: column;
+    flex:1;
+    display:inline-flex;
+    writing-mode: vertical-lr;
     /* padding: 1em 1em; */
     /* border-bottom: 1px solid black; */
     align-items: center;
+    justify-content: space-evenly;
+    min-height: 3em;
 }
 
 .control > *{
     font-size: large;
-    height:1.1em;
     text-align: center;
-    vertical-align:text-bottom;
 }
 
 .control input{
+    width:2ch;
     margin-top: 0.3em;
-    min-width: 4ch;
-    width:70%;
+    min-inline-size: 4ch;
 }
 
 .control:last-child{
