@@ -125,7 +125,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     <div class='control'>
             {`${$unitNames[unit]}`}
             <!-- <label for='{`prio-${i}`}'>{`${$unitNames[unit]}`}</label> -->
-            <!-- <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}> -->
+            <input type="number" value={$delays[unit]} on:input={sanitize(unit)} min='0' id={`prio-${i}`}>
         </div>
 
     {/each}
@@ -222,11 +222,13 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
     flex:1;
     display:inline-flex;
     writing-mode: vertical-lr;
+    flex-direction: column-reverse;
     /* padding: 1em 1em; */
     /* border-bottom: 1px solid black; */
-    align-items: center;
-    justify-content: space-evenly;
-    min-height: 3em;
+    align-items:center;
+    justify-content:start;
+    line-height: 0;
+    padding: 0;
 }
 
 .control > *{
@@ -235,9 +237,12 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 }
 
 .control input{
-    width:2ch;
-    margin-top: 0.3em;
+    writing-mode: initial;
+    width:3ch;
+    height:1em;
+    margin: 0;
     min-inline-size: 4ch;
+    transform: rotate(90deg);
 }
 
 .control:last-child{
