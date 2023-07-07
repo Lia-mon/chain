@@ -56,7 +56,7 @@ const sanitize = (id:number)=>(e:Event)=>{
         return;
     }else{
         const node = e.target as HTMLInputElement;
-        node.value = `${Math.max(0,Number(node.value))}`;
+        node.value = `${Math.max(0,Math.floor(Number(node.value)))}`;
         $delays[id] = Number(node.value);
     }
 }

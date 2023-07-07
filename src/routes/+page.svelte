@@ -102,7 +102,9 @@ button{
     font-size: larger;
     width: 100%;
     font-weight: bold;
+    border: 1px solid gray;
 }
+
 .unit-flex{
     display:flex;
     /* width:876px; */
@@ -179,7 +181,7 @@ button{
 }
 
 .help p:first-of-type{
-    margin-top: 8%;
+    margin-top: 12%;
 }
 
 </style>

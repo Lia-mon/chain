@@ -130,7 +130,7 @@ $:{for(const f of unitHits){
 
 </script>
 
-<fieldset class='unit'  transition:stretch="{{duration: 400}}">
+<fieldset class='unit' transition:stretch="{{duration: 400}}">
     <!-- Casts {casts} -->
     <div class='naming'>
         {priority+1}.
@@ -193,6 +193,7 @@ $:{for(const f of unitHits){
 </fieldset>
 
 <style>
+
 *{
     margin:0;
     font-size: larger;
@@ -200,7 +201,6 @@ $:{for(const f of unitHits){
 
 .checky{
     max-width:50px;
-    flex:0 1 ;
 }
 .cast-selection{
     margin-top: 12px;
@@ -212,12 +212,19 @@ $:{for(const f of unitHits){
 
 .cast-selection > *{
     padding:auto 0px;
-    flex:1 1 0px;
+    flex:1 1 7ch;
+    /* min-width: 7ch; */
+}
+
+.cast-selection > select{
+    padding:auto 0px;
+    flex:1 1 4ch;
+    min-width: 9ch;
 }
 
 .frame-input{
-    width: 50%;
-    flex:1 1;
+    width: 70%;
+    /* flex: 1 0; */
     /* max-width:50%; */
 }
 
@@ -229,9 +236,7 @@ $:{for(const f of unitHits){
     text-align: center;
     margin: 5px 0;
     padding: 5px 5px;
-
-    box-shadow: 0px 0px 1px black;
-
+    border: 1.5px solid gray;
 }
 
 .naming{
@@ -255,18 +260,24 @@ $:{for(const f of unitHits){
 
 .unit-buttons > *{
     flex:1;
+    border: 1px solid gray;
+    border-right: none;
 }
 
+.unit-buttons > *:last-of-type{
+    border-right: 1px solid gray; 
+}
 
 button{
     font-weight: bold;
 }
 
 .selection-menu{
+    background-color: white;
     text-align: center;
+    border: 1px solid gray;
     /* flex:1 1; */
 }
-
 
 /* Element selection stuff unused for now? */
 /* 
