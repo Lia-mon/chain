@@ -184,4 +184,7 @@ button{
     margin-top: 12%;
 }
 
+:global(*){
+    font-family: sans-serif;
+}
 </style>
