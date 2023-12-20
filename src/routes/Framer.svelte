@@ -152,7 +152,7 @@ $:if(containerVisual) containerVisual.style.backgroundSize = `${(100-4.5)/$units
 {#if ($units.length > 0)}
 <div class='container-visual' 
      style='grid-template-columns: repeat({$units.length},1fr) 4.5%;'
-     transition:slide="{{axis : 'x'}}"
+     transition:slide|global="{{axis : 'x'}}"
      bind:this={containerVisual}>
 
     {#each $units as unit,i }

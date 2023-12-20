@@ -130,7 +130,7 @@ $:{for(const f of unitHits){
 
 </script>
 
-<fieldset class='unit' transition:stretch="{{duration: 400}}">
+<fieldset class='unit' transition:stretch|global="{{duration: 400}}">
     <!-- Casts {casts} -->
     <div class='naming'>
         <!-- {priority+1}.
@@ -156,7 +156,7 @@ $:{for(const f of unitHits){
     {#each range(casts) as id}
     <div 
         class = 'cast-selection'
-        transition:stretch|local="{{duration: 400}}"
+        transition:stretch="{{duration: 400}}"
     >
 
         <input type="checkbox" class='checky' bind:checked={tagCasts[id]}>
@@ -180,7 +180,7 @@ $:{for(const f of unitHits){
 
         {#if castFlags.includes(id)}
             <input
-                transition:hstretch|local="{{duration : 200}}"
+                transition:hstretch="{{duration : 200}}"
                 type="text"
                 inputmode="numeric" 
                 placeholder=""
