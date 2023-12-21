@@ -1,38 +1,19 @@
-# create-svelte
+# What is this  
+A tool to visualize and check chains for the FFBE mobile game
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+# Usage
+It is a browser based app, you can try a live version [here](https://lia-mon.github.io/chain/)
 
-## Creating a project
+# Building
+I used svelte/sveltekit to build this app, nothing particularly special.
 
-If you're seeing this, you've probably already done this step. Congrats!
+If you want to build it yourself 
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
 ```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
+npm install
 npm run build
 ```
+I am using the static adapter to generate a static site with added the PWA requirments to try it out.
 
-You can preview the production build with `npm run preview`.
+The build will be in the `build` folder ta-dah.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
